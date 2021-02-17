@@ -1,0 +1,57 @@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="./javascripts/createUserJS.js"></script>
+</head>
+
+<body>
+<div class="bodyForm" id="containerForm">
+    <div class="container">
+        <h2 align="center" id="title">Register User</h2>
+    </div>
+
+    <div class="container" id="divUserName">
+        <label class="control-label col-sm-2" for="userName">User Name:</label>
+        <div class="col-sm-10">
+          <input type="text"  class="form-control" onkeypress="return /^[0-9a-zA-ZñÑ !@\#\$%\^&\*\(\)\-\_]+$/.test(event.key)" id="userNameT" placeholder="Enter User Name" name="user">
+          <input type="text" id="flag" name="flag" value="create" hidden>
+          <label class="control-label" id="userNameError" hidden></label>
+        </div>
+    </div>
+
+    <div id="divBlankRow1">
+        </br>
+    </div>
+
+    <div class="container" id="divPassword">
+        <label class="control-label col-sm-2" for="password">Password:</label>
+        <div class="col-sm-10">
+          <input type="password"  class="form-control" id="passWordLabel" placeholder="Enter Password">
+          <label class="control-label" id="passwordError" hidden></label>
+        </div>
+    </div>
+
+    <div id="divBlankRow2">
+        </br>
+    </div>
+
+    <div class="container" id="divCPassword">
+        <label class="control-label col-sm-2" for="cPassword">Confirm Password:</label>
+        <div class="col-sm-10">
+          <input type="password"  class="form-control" id="cPassWordLabel" placeholder="Confirm Password">
+          <label class="control-label" id="cPasswordError" hidden></label>
+        </div>
+    </div>
+
+    <div id="divBlankRow3">
+        </br>
+    </div>
+
+    <div class="container">
+        <button type="submit" id="createUserButton" class="btn btn-primary btn-lg pull-right" onclick="validate()">Create</button>
+    </div>
+</div>
+</body>
