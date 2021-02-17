@@ -1,15 +1,19 @@
 var sql = require('mssql');
+require('dotenv').config()
+
+var user = process.env
 
 var config = {
-    user: AZURE_COSMOS_DB_USER,
-    password: AZURE_COSMOS_DB_PASSWORD,
-    server: AZURE_COSMOS_DB_SERVER,
-    database: AZURE_COSMOS_DB_DATABASE,
+    user: process.env.AZURE_COSMOS_DB_USER,
+    password: process.env.AZURE_COSMOS_DB_PASSWORD,
+    server: process.env.AZURE_COSMOS_DB_SERVER,
+    database: process.env.AZURE_COSMOS_DB_DATABASE,
     encrypt: true
 }
 
 module.exports = {
     executeQuery : function executeQuery(query){
+        console.log(user)
         return new Promise((res, rej)=>{
             var conn = new sql.ConnectionPool(config);
             conn.connect()
@@ -25,6 +29,9 @@ module.exports = {
                     rej(err);
                     conn.close;
                 })
+            })
+            .catch(function(err){
+                console.log(err)
             })
         })
     }

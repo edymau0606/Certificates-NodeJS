@@ -21,6 +21,22 @@ app.set('view engine', 'hbs');
 app.use(logger('dev'));
 /* app.use(express.json());
 app.use(express.urlencoded({ extended: false })); */
+
+app.use(session({
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true
+}));
+
+app.use(bodyParser.json({
+  limit: '50mb'
+}));
+app.use(bodyParser.urlencoded({
+  limit: '50mb',
+  extended: true,
+  parameterLimit: 5000000
+}));
+
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
