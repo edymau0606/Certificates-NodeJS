@@ -13,7 +13,6 @@ var config = {
 
 module.exports = {
     executeQuery : function executeQuery(query){
-        console.log(user)
         return new Promise((res, rej)=>{
             var conn = new sql.ConnectionPool(config);
             conn.connect()

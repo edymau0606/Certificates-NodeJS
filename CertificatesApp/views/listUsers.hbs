@@ -9,15 +9,26 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
     <script type="text/javascript" charset="utf8"
     src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script src="./javascripts/getUsersJS.js"></script>
+    <style type="text/css">
+    body {
+      padding-right: 0 !important
+    }
+
+    .modal-open {
+      overflow: hidden;
+      padding-right: 0 !important;
+    }
+    </style>
 </head>
 
 <body>
     <div class="container">
         <h2 align="center">Users</h2>
-        <ul class="list-group" id="usersList">
+        <ul class="list-group" id="list">
         </ul>
     </div>
-    <table id="userID" class="table table-bordered">
+    <table id="user_id" class="table table-bordered">
         <thead>
             <tr>
                 <th>User Name</th>
@@ -27,4 +38,7 @@
         <tbody id="user">
         </tbody>
     </table>
+    <script>
+        listUsers();
+    </script>
 </body>
