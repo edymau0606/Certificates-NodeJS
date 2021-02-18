@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next){
-  var student = new Student(req.body.name, req.body.lastName, req.body.career, req.body.age, req.body.grade)
+  var student = new Student(req.body.name, req.body.lastName, req.body.career, req.body.age)
   students.create(db, student)
   .then(function(response){
     res.send(response);
@@ -21,7 +21,7 @@ router.post('/', function(req, res, next){
 
 router.put('/:fullName', function(req, res, next){
   var fullName = req.params.fullName;
-  var student = new Student(req.body.name, req.body.lastName, req.body.career, req.body.age, req.body.grade)
+  var student = new Student(req.body.name, req.body.lastName, req.body.career, req.body.age)
   students.update(db, fullName, student)
   .then(function(response){
     res.send(response);
@@ -33,7 +33,7 @@ router.put('/:fullName', function(req, res, next){
 
 router.delete('/:fullName', function(req,res,next){
   var fullName = req.params.fullName;
-  students.delete(db, student)
+  students.delete(db, fullName)
   .then(function(response){
     res.send(response);
   })
