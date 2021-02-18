@@ -24,11 +24,9 @@ router.put('/:name', function(req, res, next){
   var user = new User(req.body.userName, req.body.userPassword)
   users.update(db, name, user)
   .then(function(response){
-    console.log("dfsdf")
     res.send(response);
   })
   .catch(function(err){
-    console.log("12331")
     res.send(err);
   })
 })
