@@ -1,8 +1,132 @@
 <head>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <title>Certificates App</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="../javascripts/AutoLogout.js"></script>
+  <style>
+    #userNameID{
+      margin-right: 20px!important;
+    }
+    nav.navbar {
+    background-color: #72c02c!important;
+    }
+
+    .navbar-dark .navbar-nav .nav-link {
+      color: white!important;
+    }
+  </style>
 </head>
-<body>
+  <body style="background-color: white">
+  <script>
+    var logout = new AutoLogout();
+    var self = this;
+    $(document).ready(function () {
+      var li = document.createElement("LI")
+      var liActual = document.createElement("LI")
+      var html = "";
+      var htmlActual = "";
+      html = document.getElementById("ulItem").innerText;
+      htmlActual = document.getElementById("ulItemActual").innerText;
+      li.innerHTML = html;
+      liActual.innerHTML = htmlActual
+      li.setAttribute("class", "nav-item dropdown")
+      liActual.setAttribute("class", "nav-item dropdown")
+      document.getElementById("ulItems").appendChild(li);
+      document.getElementById("ulItems").appendChild(liActual);
+
+      var logOut = document.getElementById("logOutButton").innerText;
+      if (logOut == "Hide") {
+        var buttonLogOut = document.getElementById("buttonLogOut")
+        buttonLogOut.style.display = 'none';
+        var navBar = document.getElementById("ulItems")
+        navBar.hidden = true;
+      }
+      var userName = document.getElementById("userName").innerText
+      var userNameID = document.getElementById("userNameID")
+      userNameID.innerHTML = userName
+
+    })
+
+    function logOut() {
+      var opcion = confirm("Are you sure you want to log out?")
+      if (opcion == true) {
+        var data = JSON.stringify({})
+        var settings = {
+          "async": true,
+          "crossDomain": true,
+          "url": window.location.origin + "/logout",
+          "method": "POST",
+          "headers": {
+            "Content-Type": "application/json",
+            "cache-control": "no-cache"
+          },
+          "processData": false,
+          "data": data
+        }
+
+        $.ajax(settings).done(function (response) {
+          console.log(response);
+          location.href = window.location.origin
+        });
+      }
+    }
+
+  </script>
+  <h1 id="ulItem" hidden>{{hiddenEl}}</h1>
+  <h1 id="ulItemActual" hidden>{{hiddenActualEl}}</h1>
+  <h1 id="logOutButton" hidden>{{logOutButton}}</h1>
+  <h1 id="userName" hidden>{{userName}}</h1>
+  <nav class="navbar navbar-expand-sm bg-success navbar-dark">
+
+    <a class="navbar-brand" href="/">
+      <img src="../images/aa-logo.png" style="width:150px;">
+    </a>
+
+    <ul class="navbar-nav" id="ulItems">
+      <li class="nav-item dropdown" id="liTable">
+        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+          Students
+        </a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="createTable">Create</a>
+          <a class="dropdown-item" href="table">List</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+          Certificates
+        </a>
+        <div class="dropdown-menu" id="liTemplate">
+          <a class="dropdown-item" href="report">Generate</a>
+          <a class="dropdown-item" href="createTemplate">Create/Upload</a>
+          <a class="dropdown-item" href="template">List</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown" id="liTable">
+        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+          Users
+        </a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="createUser">Create</a>
+          <a class="dropdown-item" href="users">List</a>
+        </div>
+      </li>
+    </ul>
+    <div class="ml-auto mr-1">
+      <span class="badge badge-pill badge-primary ml-auto mr-1" id="userNameID"></span>
+      <button type="button" class="btn btn-default" onclick="logOut()" id="buttonLogOut"> <span
+        class="glyphicon glyphicon-log-out"></span> Log out </button>
+    </div>
+    
+
+  </nav>
+
+
+  <div class="container-fluid">
+  </div>
   {{{body}}}
 </body>
