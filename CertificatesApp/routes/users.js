@@ -19,4 +19,29 @@ router.post('/', function(req, res, next){
   })
 });
 
+router.put('/:name', function(req, res, next){
+  var name = req.params.name;
+  var user = new User(req.body.userName, req.body.userPassword)
+  users.update(db, name, user)
+  .then(function(response){
+    console.log("dfsdf")
+    res.send(response);
+  })
+  .catch(function(err){
+    console.log("12331")
+    res.send(err);
+  })
+})
+
+router.delete('/:name', function(req,res,next){
+  var name = req.params.name;
+  users.delete(db, name)
+  .then(function(response){
+    res.send(response);
+  })
+  .catch(function(err){
+    res.send(err);
+  })
+})
+
 module.exports = router;
