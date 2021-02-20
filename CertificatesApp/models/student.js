@@ -1,9 +1,10 @@
 class Student {
-    constructor (name, lastName, career, age, grade){
+    constructor (name, lastName, career, age){
         this.name = name;
         this.lastName = lastName;
         this.career = career;
         this.age = age;
-        this.grade = grade;
     }
 }
+
+module.exports = Student

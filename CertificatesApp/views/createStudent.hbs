@@ -15,7 +15,7 @@
     <div class="container" id="divStudentName">
         <label class="control-label col-sm-2" for="studentName">Name:</label>
         <div class="col-sm-10">
-          <input type="text"  class="form-control" onkeypress="return /^[a-zA-ZñÑ]+$/.test(event.key)" id="studentNameT" placeholder="Enter Student Name" name="student">
+          <input type="text"  class="form-control" onkeypress="return /^[a-zA-ZñÑ´]+$/.test(event.key)" id="studentNameT" placeholder="Enter Student Name" name="student">
           <input type="text" id="flag" name="flag" value="create" hidden>
           <label class="control-label" id="studentNameError" hidden></label>
         </div>
@@ -28,7 +28,7 @@
     <div class="container" id="divStudentLastName">
         <label class="control-label col-sm-2" for="studentLastName">Last Name:</label>
         <div class="col-sm-10">
-          <input type="text"  class="form-control" onkeypress="return /^[a-zA-ZñÑ]+$/.test(event.key)" id="studentLastNameT" placeholder="Enter Student Last Name" name="studentLast">
+          <input type="text"  class="form-control" onkeypress="return /^[a-zA-ZñÑ´]+$/.test(event.key)" id="studentLastNameT" placeholder="Enter Student Last Name" name="studentLast">
           <label class="control-label" id="studentLastNameError" hidden></label>
         </div>
     </div>
@@ -40,7 +40,7 @@
     <div class="container" id="divCareer">
         <label class="control-label col-sm-2" for="career">Career:</label>
         <div class="col-sm-10">
-          <input type="text"  class="form-control" onkeypress="return /^[a-zA-ZñÑ]+$/.test(event.key)" id="career" placeholder="Enter Career" name="career">
+          <input type="text"  class="form-control" onkeypress="return /^[a-zA-ZñÑ ´]+$/.test(event.key)" id="career" placeholder="Enter Career" name="career">
           <label class="control-label" id="careerError" hidden></label>
         </div>
     </div>
@@ -69,15 +69,21 @@
     var changePasswordFlag = 0;
 var URL = (window.location.search).substring(1);
 var flag = getQueryVariable("flag");
-var studentName = getQueryVariable("studentName")
-var studentLastName = getQueryVariable("studentLastName")
+var studentName = getQueryVariable("name")
+var studentLastName = getQueryVariable("lastName")
+var career = unescape(getQueryVariable("career"))
+var age = getQueryVariable("age")
 var submitButton = document.getElementById("createStudentButton")
 if(flag=="edit"){
   var title = document.getElementById("title")
   var studentNameText = document.getElementById("studentNameT")
   var studentLastNameText = document.getElementById("studentLastNameT")
+  var careerText = document.getElementById("career")
+  var ageText = document.getElementById("age")
   studentNameText.value = studentName
   studentLastNameText.value = studentLastName
+  careerText.value = career
+  ageText.value = age
   title.innerHTML = "Edit Student: "+studentName
   submitButton.innerHTML = "Update"
 }
@@ -95,8 +101,10 @@ var settings = {
 
 $.ajax(settings).done(function (response) {
   var students = (JSON.parse(response)).data
-  for (let i = 0; i < users.length; i++) {
-    studentNames.push(students[i].fullName);
+  for (let i = 0; i < students.length; i++) {
+    var sName = (students[i].name).trim()
+    var slName = students[i].lastName.trim()
+    studentNames.push((sName+"-"+slName));
   }
 });
 
@@ -117,7 +125,6 @@ function validate() {
   var age = document.getElementById("age");
   var ageError = document.getElementById("ageError");
   var divAge = document.getElementById("divAge");
-
   if (studentName.value == "") {
     cleanErrors();
     studentNameError.innerHTML = "Insert a Student Name"
@@ -132,7 +139,8 @@ function validate() {
     divStudentName.setAttribute("class", "container has-error has-feedback")
     $("#createStudentButton").attr("disabled", false);
     return false;
-  } else if (password.value == "") {
+  } 
+  /* else if (password.value == "") {
     cleanErrors();
     console.log(changePasswordFlag)
     if(changePasswordFlag==0 && flag=="edit"){
@@ -151,13 +159,13 @@ function validate() {
     cPasswordError.hidden = false;
     divCPassword.setAttribute("class", "container has-error has-feedback")
     $("#createUserButton").attr("disabled", false);
-    return false;
-  } else {
+    return false;}  */
+  else {
     cleanErrors();
     if(flag=="edit"){
-      updateUser(changePasswordFlag);
+      updateStudent();
     } else{
-      insertUser();
+      insertStudent();
     }
     return true;
   }
@@ -181,8 +189,8 @@ function cleanErrors(){
 function insertStudent() {
   var studentName = document.getElementById("studentNameT").value;
   var studentLastName = document.getElementById("studentLastNameT").value;
-  var career = document.getElementById("studentNameT").value;
-  var age = document.getElementById("studentNameT").value;
+  var career = document.getElementById("career").value;
+  var age = document.getElementById("age").value;
   
   var data = JSON.stringify({
     "name": studentName,
@@ -208,18 +216,17 @@ function insertStudent() {
   xhr.send(data);
 }
 
-function updateUser(flag) {
-  var userName = document.getElementById("userNameT").value;
-  var userPassword;
-  if(flag==1){
-    userPassword = document.getElementById("password").value;
-  } else{
-    userPassword = "";
-  }
+function updateStudent() {
+  var studentName = document.getElementById("studentNameT").value;
+  var studentLastName = document.getElementById("studentLastNameT").value;
+  var career = document.getElementById("career").value;
+  var age = document.getElementById("age").value;
 
   var data = JSON.stringify({
-    "userName": userName,
-    "userPassword": userPassword
+    "name": studentName,
+    "lastName": studentLastName,
+    "career": career,
+    "age": age
   });
 
   var xhr = new XMLHttpRequest();
@@ -227,11 +234,13 @@ function updateUser(flag) {
 
   xhr.addEventListener("readystatechange", function () {
     if (this.readyState === 4) {
-      location.href = window.location.origin + "/users"
+      location.href = window.location.origin + "/students"
     }
   });
 
-  xhr.open("PUT", window.location.origin + "/users/"+getQueryVariable("userName"));
+  var fullName = getQueryVariable("name")+"-"+getQueryVariable("lastName")
+
+  xhr.open("PUT", window.location.origin + "/students/"+fullName);
   xhr.setRequestHeader("Content-Type", "application/json");
   xhr.setRequestHeader("cache-control", "no-cache");
 

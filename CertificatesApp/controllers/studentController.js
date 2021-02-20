@@ -1,6 +1,6 @@
 module.exports.create = (db, student) => {
     return new Promise((res, rej) => {
-        db.executeQuery("INSERT INTO dbo.[Student] VALUES('"+student.name+"', '"+student.lastName+"', '"+student.career+"', '"+student.age+"')")
+        db.executeQuery("INSERT INTO dbo.[Student] VALUES('"+student.name+"', '"+student.lastName+"', '"+student.career+"', "+student.age+")")
         .then(function(response){
             res(response);
         })
@@ -10,11 +10,11 @@ module.exports.create = (db, student) => {
     })
 }
 
-module.exports.update = (db, fullName, user) => {
+module.exports.update = (db, fullName, student) => {
     return new Promise((res, rej) => {
         var firstName = (fullName.split("-"))[0]
         var lastName = (fullName.split("-"))[1]
-        db.executeQuery("UPDATE dbo.[Student] SET Name = '"+student.name+"', LastName = '"+student.lastName+"', Career = '"+student.career+"', Age = '"+student.age+"' WHERE Name = '"+firstName+"' AND LastName = '"+lastName+"'")
+        db.executeQuery("UPDATE dbo.[Student] SET Name = '"+student.name+"', LastName = '"+student.lastName+"', Career = '"+student.career+"', Age = "+student.age+" WHERE Name = '"+firstName+"' AND LastName = '"+lastName+"'")
         .then(function(response){
             res(response);
         })
