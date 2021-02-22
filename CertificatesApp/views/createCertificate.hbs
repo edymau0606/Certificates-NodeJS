@@ -6,6 +6,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css"
+        href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
     <style type="text/css">
         .file-upload-btn {
             width: 100%;
@@ -145,6 +147,27 @@
         </style>
 </head>
 <body>
+    <Script>
+        function readURL(input){
+            console.log(input.files)
+            if(input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('.image-upload-wrap').hide();
+                    var path = window.URL.createObjectURL(input.files[0]);
+                    $('.file-upload-image').attr('src', "../images/docx.png");
+                    $('.file-upload-content').show();
+                    $("#certificateName").val((input.files[0].name).split(".")[0])
+                    $('.image-title').html(input.files[0].name);
+                }
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                removeUpload();
+            }
+        }
+
+        function removeUpload(){}
+    </Script>
     <div class="bodyForm">
         <form id="upload-form" action="/certificates" onsubmit="return validate(); buttonName.disabled=true; return true;"
         method="POST" enctype="multipart/form-data">
