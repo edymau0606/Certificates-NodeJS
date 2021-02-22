@@ -139,27 +139,35 @@ function validate() {
     divStudentName.setAttribute("class", "container has-error has-feedback")
     $("#createStudentButton").attr("disabled", false);
     return false;
-  } 
-  /* else if (password.value == "") {
+  } else if (studentLastName.value == "") {
     cleanErrors();
-    console.log(changePasswordFlag)
-    if(changePasswordFlag==0 && flag=="edit"){
-      updateUser(changePasswordFlag);
-      return true;
-    } else {
-      passwordError.innerHTML = "Insert a Password"
-      passwordError.hidden = false;
-      divPassword.setAttribute("class", "container has-error has-feedback")
-      $("#createUserButton").attr("disabled", false);
-      return false;
-    }
-  } else if (password.value != cPassword.value) {
+    studentLastNameError.innerHTML = "Insert a Student Last Name"
+    studentLastNameError.hidden = false;
+    divStudentLastName.setAttribute("class", "container has-error has-feedback")
+    $("#createStudentButton").attr("disabled", false);
+    return false;
+  } else if (career.value == "") {
     cleanErrors();
-    cPasswordError.innerHTML = "Password Mismatch"
-    cPasswordError.hidden = false;
-    divCPassword.setAttribute("class", "container has-error has-feedback")
-    $("#createUserButton").attr("disabled", false);
-    return false;}  */
+    careerError.innerHTML = "Insert a Career"
+    careerError.hidden = false;
+    divCareer.setAttribute("class", "container has-error has-feedback")
+    $("#createStudentButton").attr("disabled", false);
+    return false;
+  } else if (age.value == "") {
+    cleanErrors();
+    ageError.innerHTML = "Insert an Age"
+    ageError.hidden = false;
+    divAge.setAttribute("class", "container has-error has-feedback")
+    $("#createStudentButton").attr("disabled", false);
+    return false;
+  } else if (age.value == 0) {
+    cleanErrors();
+    ageError.innerHTML = "0 is not valid"
+    ageError.hidden = false;
+    divAge.setAttribute("class", "container has-error has-feedback")
+    $("#createStudentButton").attr("disabled", false);
+    return false;
+  }
   else {
     cleanErrors();
     if(flag=="edit"){

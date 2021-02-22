@@ -5,7 +5,7 @@ function listStudents(){
             "url": window.location.origin + "/getStudents"
         },
         "columns": [
-            { "data": "name"+" "+"" },
+            { "data": "fullName" },
             { "data": "career" },
             { "data": "age" },
             { "data": "html" }
