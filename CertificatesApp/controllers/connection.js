@@ -1,8 +1,6 @@
 var sql = require('mssql');
 require('dotenv').config()
 
-var user = process.env
-
 var config = {
     user: process.env.AZURE_COSMOS_DB_USER,
     password: process.env.AZURE_COSMOS_DB_PASSWORD,

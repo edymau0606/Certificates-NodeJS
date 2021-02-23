@@ -148,8 +148,21 @@
 </head>
 <body>
     <Script>
+        $.ajax({
+            type: "GET",
+            url: "/getCertificateTypes",
+            dataType: "json",
+            success: function (data){
+                var datavalue = data;
+                var serverResponse = datavalue;
+                contentType: "application/json";
+                console.log(serverResponse)
+                $.each(serverResponse, function(i, serverResponse) {
+                    $("#certificateType").append("<option value='" + serverResponse.id + "'>" + serverResponse.name + "</option>")
+                })
+            }
+        })
         function readURL(input){
-            console.log(input.files)
             if(input.files && input.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function(e) {
@@ -166,7 +179,30 @@
             }
         }
 
-        function removeUpload(){}
+        function removeUpload(){
+            $('.file-upload-input').replaceWith($('file-upload-input').clone())
+            $('.file-upload-content').hide();
+            $('.image-upload-wrap').show();
+            $('#certificateName').val("")
+        }
+
+        $('.image-upload-wrap').bind('dragover', function(){
+            $('.image-upload-wrap').addClass('image-dropping');
+        })
+        $('.image-upload-wrap').bind('dragleave', function(){
+            $('.image-upload-wrap').removeClass('image-dropping');
+        })
+
+        $(document).ready(function(){
+            var currentYear = new Date().getFullYear();
+            for(var i=2017; i<=currentYear; i++) {
+                $('#year').append("<option value='"+i.toString() + "'>" + i.toString() + "</option>")
+            }
+        })
+
+        function validate() {
+            return true;
+        }
     </Script>
     <div class="bodyForm">
         <form id="upload-form" action="/certificates" onsubmit="return validate(); buttonName.disabled=true; return true;"
@@ -195,17 +231,15 @@
                     <div class="def">
                         <div class="form-group">
                             <label for="imageName">Certificate Name:</label>
-                            <input type="text" class="form-control" name="certificateName"
-                            onkeypress="return /^[0-9a-zA-ZñÑ !@\#\$%\^&\*\(\)\-\_]+$/.test(event.key)"
-                            id="certificateName" required>
+                            <input type="text" class="form-control" name="certificateName" onkeypress="return /^[0-9a-zA-ZñÑ !@\#\$%\^&\*\(\)\-\_]+$/.test(event.key)" id="certificateName" required>
                         </div>
                         <div class="form-group">
                             <label for="year">Year:</label>
                             <select class="form-control" name="year" id="year" required></select>
                         </div>
                         <div class="form-group">
-                            <label for="reportType">Report Type:</label>
-                            <select class="form-control" name="reportType" id="reportType" required></select>
+                            <label for="certificateType">Certificate Type:</label>
+                            <select class="form-control" name="certificateType" id="certificateType" required></select>
                         </div>
                     </div>
                     <div class="text-right buttonDef">
