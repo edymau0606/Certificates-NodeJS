@@ -17,6 +17,7 @@ var getStudentsRouter = require('./routes/getStudents');
 var certificatesRouter = require('./routes/certificates');
 var createCertificateRouter = require('./routes/createCertificate');
 var getCertificateTypesRouter = require('./routes/getCertificateTypes');
+var getCertificatesRouter = require('./routes/getCertificates');
 
 var app = express();
 
@@ -57,6 +58,7 @@ app.use('/getStudents', getStudentsRouter);
 app.use('/certificates', certificatesRouter);
 app.use('/createCertificate', createCertificateRouter);
 app.use('/getCertificateTypes', getCertificateTypesRouter);
+app.use('/getCertificates', getCertificatesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

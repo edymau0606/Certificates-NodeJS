@@ -9,6 +9,12 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
     <script type="text/javascript" charset="utf8"
     src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script src="./javascripts/getCertificatesJS.js"></script>
+    <style type="text/css">
+        .glyphicon-list-alt:before {
+            font-size: 26;
+        }
+    </style>
 </head>
 
 <body>
@@ -16,5 +22,46 @@
         <h2 align="center">Certificates</h2>
         <ul class="list-group" id="list"></ul>
     </div>
-    <table id="table_id" class="table table-bordered"
+    <table id="table_id" class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Year</th>
+                <th>Type</th>
+                <th>Link</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody id="table">
+        </tbody>
+    </table>
+
+    <div class="modal fade" id="report" tabindex="-1" role="dialog" aria.labelledby="mcModalIniciativas" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" id="modalGenerateCertificate">
+                <div modal="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" onclick="hideLoading()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="divLoader">
+                        <div class="loader" id="loader"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            <div class="modal-content" id="modal">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        listCertificates();
+    </script>
 </body>
