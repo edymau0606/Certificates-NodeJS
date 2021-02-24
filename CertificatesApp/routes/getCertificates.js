@@ -8,7 +8,7 @@ router.get('/', function(req, res, next){
         var data = {}
         var certificates = []
         for(let i=0; i<response.length; i++){
-            certificates.push({id: response[i].CertificateID, name: response[i].CertificateName, year: response[i].Year, type: response[i].CertificateTypeName, blobURL: "<a href='"+response[i].CertificateBlobURL+"'>"+response[i].CertificateName+"</a>", html: "<a href='#' class='click' id='"+response[i].CertificateID+"-_-"+response[i].CertificateTypeName+"-_-"+response[i].CertificateBlobURL+"-_-"+response[i].Year+"' name='"+response[i].CertificateName+"' onclick='certificatePreview(this)'><i class='glyphicon glyphicon-list-alt' data-toggle='modal' data-target='#certificate'></i> </a><a href='#' class='click' id='"+response[i].CertificateID+"' name='"+response[i].CertificateName+"' onclick='deleteCertificate(this)'><i class='icon-remove-circle icon-2x'></i></a>"})
+            certificates.push({id: response[i].CertificateID, name: response[i].CertificateName, year: response[i].Year, type: response[i].CertificateTypeName, blobURL: "<a href='"+response[i].CertificateBlobURL+"'>"+response[i].CertificateName+"</a>", html: "<a href='#' class='click' id='"+response[i].CertificateID+"-_-"+response[i].CertificateTypeName+"-_-"+response[i].CertificateBlobURL+"-_-"+response[i].Year+"' name='"+response[i].CertificateName+"' onclick='certificatePreview(this)'><i class='glyphicon glyphicon-list-alt' data-toggle='modal' data-target='#report'></i> </a><a href='#' class='click' id='"+response[i].CertificateID+"' name='"+response[i].CertificateName+"' onclick='deleteCertificate(this)'><i class='icon-remove-circle icon-2x'></i></a>"})
         }
         data = {data: certificates}
         res.end(JSON.stringify(data))

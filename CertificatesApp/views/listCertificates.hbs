@@ -9,7 +9,6 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
     <script type="text/javascript" charset="utf8"
     src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-    <script src="./javascripts/getCertificatesJS.js"></script>
     <style type="text/css">
         .glyphicon-list-alt:before {
             font-size: 26;
@@ -36,10 +35,10 @@
         </tbody>
     </table>
 
-    <div class="modal fade" id="report" tabindex="-1" role="dialog" aria.labelledby="mcModalIniciativas" aria-hidden="true">
+    <div class="modal fade" id="report" tabindex="-1" role="dialog" aria-labelledby="mcModalIniciativas" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content" id="modalGenerateCertificate">
-                <div modal="modal-header">
+            <div class="modal-content" id="modal2">
+                <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" onclick="hideLoading()">&times;</button>
                 </div>
                 <div class="modal-body">
@@ -51,17 +50,235 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
-            <div class="modal-content" id="modal">
+            <div class="modal-content" id="modal1">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 </div>
                 <div class="modal-body">
-
+                    <div class="row-fluid">
+                        <div class="panel-group" id="accordion">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" id="title">
+                                            Summary
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseOne" class="panel-collapse collapse in">
+                                    <div id="divVariableName" class="form-group">
+                                        <label class="control-label" id="variableNameError" hidden>Variables not found in Data Base:
+                                        </label>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="row-fluid">
+                                            <div class="container">
+                                                <div class="col-md-4">
+                                                    <div>
+                                                        <iframe id="certificateTemplate" src="" frameborder="0" height="250px">
+                                                        </iframe>
+                                                    </div><br />
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="certificateType">Certificate Type:</label><br />
+                                                    <label id="certificateType"></label><br /><br /><br />
+                                                    <label for="year">Year:</label><br />
+                                                    <label id="year"></label><br /><br /><br />
+                                                    <label for="student">Select Student:</label><br />
+                                                    <select id="student"></select><br /><br /><br />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="cleanArrays()">Cancel</button>
+                        <button type="button" class="btn btn-primary" onclick="generateCertificate()">Generate Certificate</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <script>
+        function listCertificates(){
+            $('#table_id').DataTable({
+                "ajax": {
+                    "method": "GET",
+                    "url": window.location.origin + "/getCertificates"
+                },
+                "columns": [
+                    {"data": "name"},
+                    {"data": "year"},
+                    {"data": "type"},
+                    {"data": "blobURL"},
+                    {"data": "html"}
+                ]
+            })
+        }
+
+        var studentValues = []
+        var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": window.location.origin + "/getStudents",
+        "method": "GET",
+        "headers": {
+            "cache-control": "no-cache",
+        }
+        }
+
+        $.ajax(settings).done(function (response) {
+        var students = (JSON.parse(response)).data
+        for (let i = 0; i < students.length; i++) {
+            var id = students[i].id
+            var sName = (students[i].name).trim()
+            var slName = (students[i].lastName).trim()
+            var career = (students[i].career).trim()
+            var age = students[i].age
+            studentValues.push({id: i, name: sName, lastName: slName, studentName: sName +" "+ slName, career: career, age: age});
+            //studentValues.push(sName+"-_-"+slName+"-_-"+sName+" "+slName+"-_-"+career+"-_-"+age)
+            $("#student").append("<option value='" + id +"'>"+sName+" "+slName + "</option>")
+        }
+        });
+
+        $("#modal2").hide()
+        var textVariables = []
+        var counterText = 0
+        var tagsWithValues = []
+
         listCertificates();
+
+        function hideLoading() {
+            $("#modal1").show()
+            $("#modal2").hide()
+        }
+
+        function certificatePreview(certificate){
+            cleanArrays();
+            $("#certificateType").empty();
+            $("#year").empty();
+            $("#certificate").empty();
+
+            var certificateName = certificate.name;
+            var certificateType = (((certificate.id).split("-_-"))[1]).trim();
+            var certificateBlobURL = (((certificate.id).split("-_-"))[2]).trim();
+            var year = (((certificate.id).split("-_-"))[3]).trim();
+
+            var title = document.getElementById("title");
+            title.innerHTML = certificateName
+
+            $("#certificateType").append(certificateType);
+            localStorage.setItem("lsCertificateType", certificateType)
+
+            $("#year").append(year);
+            localStorage.setItem("lsYear", year);
+
+            localStorage.setItem("lsCertificateBlobURL", escape(certificateBlobURL))
+            $("#certificateTemplate").attr("src", "https://docs.google.com/gview?url="+ certificateBlobURL +"&embedded=true")
+
+            localStorage.setItem("lsCertificateName", certificateName)
+        }
+
+        function fillArray(tags){
+            return new Promise((res, rej) =>{
+                for(var key in tags){
+                    textVariables.push(key)
+                }
+                res("true")
+            })
+        }
+
+
+        function getVariables(textVariables) {
+            var studentNameElement = document.getElementById("student")
+            var studentNameSelected = studentNameElement.options[studentNameElement.selectedIndex].text
+            var variableNameError = document.getElementById("variableNameError")
+            variableNameError.innerHTML = "Variables not found in Data Base: "
+            return new Promise((res, rej) => {
+                if (textVariables.length == 0) {
+                    variableNameError.hidden = false;
+                    res("true")
+                } else { 
+                    for (let j=0; j<studentValues.length; j++){
+                        console.log(tagsWithValues)
+                        if(studentValues[j].studentName == studentNameSelected){
+                            for(let i=0; i<textVariables.length; i++){
+                                if(textVariables[i]=="studentName"){
+                                    json = {studentName: studentValues[j].studentName}
+                                    tagsWithValues.push(json)
+                                } else if(textVariables[i]=="career") {
+                                    json = {career: studentValues[j].career}
+                                    tagsWithValues.push(json)
+                                } else if(textVariables[i]=="date") {
+                                    var date = new Date();
+                                    var day = date.getDate();
+                                    var month = date.getMonth()+1;
+                                    var year = date.getFullYear();
+                                    var fullDate = day+"/"+month+"/"+year
+                                    json = {date: fullDate}
+                                    tagsWithValues.push(json)
+                                } else {
+                                    variableNameError.hidden = false;
+                                    if (variableNameError.innerHTML == "Variables not found in Data Base: ") {
+                                        variableNameError.innerHTML = variableNameError.innerHTML + " '" + textVariables[i] + "'"
+                                    } else {
+                                        variableNameError.innerHTML = variableNameError.innerHTML + ", '" + textVariables[i] + "'"
+                                    }
+                                }
+                            }
+                        } 
+                    }
+                }
+            })
+        }
+
+        function generateCertificate(){
+            $("#modal1").hide()
+            $("#modal2").show()
+
+            var url = localStorage.getItem("lsCertificateBlobURL")
+            
+            var data = JSON.stringify({
+                "url": url
+            })
+
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": window.location.origin + "/getTags",
+                "method": "POST",
+                "headers": {
+                    "Content-Type": "application/json",
+                    "cache-control": "no-cache"
+                },
+                "processData": false,
+                "data": data
+            }
+
+            $.ajax(settings).done(function(response){
+                fillArray(response)
+                .then(function(){
+                    getVariables(textVariables)
+                    .then(function(){
+                        console.log("asf")
+                    })
+                })
+            })
+        }
+
+        function cleanArrays(){
+            var variableNameError = document.getElementById("variableNameError")
+            variableNameError.hidden = true;
+            variableNameError.innerHTML = 'Variables not found in Data Base'
+            textVariables = []
+            counterText = 0
+            tagsWithValues = []
+            if (document.getElementById("downloadArchive")) {
+                document.getElementById("downloadArchive").remove()
+            }
+        }
     </script>
 </body>
