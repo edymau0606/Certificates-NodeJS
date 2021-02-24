@@ -1,4 +1,4 @@
-module.exports.verifyCredentiales = (db, user) => {
+module.exports.verifyCredentials = (db, user) => {
     return new Promise((res, rej) =>{
         let psw = Buffer.from(user.userPassword, 'base64').toString();
         sha1 = require('js-sha1');
