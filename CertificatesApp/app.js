@@ -19,6 +19,8 @@ var createCertificateRouter = require('./routes/createCertificate');
 var getCertificateTypesRouter = require('./routes/getCertificateTypes');
 var getCertificatesRouter = require('./routes/getCertificates');
 var getTagsRouter = require('./routes/getTags');
+var replaceArchiveRouter = require('./routes/replaceArchive')
+var loginRouter = require('./routes/login')
 
 var app = express();
 
@@ -61,6 +63,8 @@ app.use('/createCertificate', createCertificateRouter);
 app.use('/getCertificateTypes', getCertificateTypesRouter);
 app.use('/getCertificates', getCertificatesRouter);
 app.use('/getTags', getTagsRouter);
+app.use('/replaceArchive', replaceArchiveRouter)
+app.use('/login', loginRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

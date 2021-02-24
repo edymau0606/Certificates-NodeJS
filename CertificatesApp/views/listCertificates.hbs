@@ -1,9 +1,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css"
     href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
@@ -12,6 +12,58 @@
     <style type="text/css">
         .glyphicon-list-alt:before {
             font-size: 26;
+        }
+
+        .divLoader{
+            text-align: center;
+        }
+
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 240px;
+            height: 240px;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+            display: inline-block;
+        }
+
+        #loadingText {
+            display: inline-block;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyFrames spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        body {
+            padding-right: 0 !important;
+        }
+
+        .modal-open {
+            overflow: hidden;
+            padding-right: 0 !important;
+        }
+
+        #variableNameError {
+            color: red
         }
     </style>
 </head>
@@ -80,12 +132,12 @@
                                                     </div><br />
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <label for="certificateType">Certificate Type:</label><br />
-                                                    <label id="certificateType"></label><br /><br /><br />
-                                                    <label for="year">Year:</label><br />
-                                                    <label id="year"></label><br /><br /><br />
-                                                    <label for="student">Select Student:</label><br />
-                                                    <select id="student"></select><br /><br /><br />
+                                                    <label for="certificateType">Certificate Type:</label>
+                                                    <label id="certificateType"></label><br />
+                                                    <label for="year">Year:</label>
+                                                    <label id="year"></label><br />
+                                                    <label for="student">Select Student:</label>
+                                                    <select id="student"></select><br />
                                                 </div>
                                             </div>
                                         </div>
@@ -139,7 +191,6 @@
             var career = (students[i].career).trim()
             var age = students[i].age
             studentValues.push({id: i, name: sName, lastName: slName, studentName: sName +" "+ slName, career: career, age: age});
-            //studentValues.push(sName+"-_-"+slName+"-_-"+sName+" "+slName+"-_-"+career+"-_-"+age)
             $("#student").append("<option value='" + id +"'>"+sName+" "+slName + "</option>")
         }
         });
@@ -199,19 +250,27 @@
             variableNameError.innerHTML = "Variables not found in Data Base: "
             return new Promise((res, rej) => {
                 if (textVariables.length == 0) {
+                    hideLoading();
                     variableNameError.hidden = false;
-                    res("true")
+                    deleteCertificateFromProject();
                 } else { 
                     for (let j=0; j<studentValues.length; j++){
-                        console.log(tagsWithValues)
                         if(studentValues[j].studentName == studentNameSelected){
                             for(let i=0; i<textVariables.length; i++){
                                 if(textVariables[i]=="studentName"){
                                     json = {studentName: studentValues[j].studentName}
                                     tagsWithValues.push(json)
+                                    counterText=counterText+1
+                                    if(counterText == (textVariables.length)) {
+                                        res("true")
+                                    }
                                 } else if(textVariables[i]=="career") {
                                     json = {career: studentValues[j].career}
                                     tagsWithValues.push(json)
+                                    counterText=counterText+1
+                                    if(counterText == (textVariables.length)) {
+                                        res("true")
+                                    }
                                 } else if(textVariables[i]=="date") {
                                     var date = new Date();
                                     var day = date.getDate();
@@ -220,13 +279,19 @@
                                     var fullDate = day+"/"+month+"/"+year
                                     json = {date: fullDate}
                                     tagsWithValues.push(json)
+                                    counterText=counterText+1
+                                    if(counterText == (textVariables.length)) {
+                                        res("true")
+                                    }
                                 } else {
+                                    hideLoading();
                                     variableNameError.hidden = false;
                                     if (variableNameError.innerHTML == "Variables not found in Data Base: ") {
                                         variableNameError.innerHTML = variableNameError.innerHTML + " '" + textVariables[i] + "'"
                                     } else {
                                         variableNameError.innerHTML = variableNameError.innerHTML + ", '" + textVariables[i] + "'"
                                     }
+                                    deleteCertificateFromProject();
                                 }
                             }
                         } 
@@ -263,22 +328,92 @@
                 .then(function(){
                     getVariables(textVariables)
                     .then(function(){
-                        console.log("asf")
+                        replaceArchive(tagsWithValues)
                     })
                 })
             })
         }
 
+        var jsonToReplace = {}
+
+        function replaceArchive(tagsWithValues) {
+            for(var tag in tagsWithValues) {
+                for(var key in tagsWithValues[tag]) {
+                    jsonToReplace[key] = tagsWithValues[tag][key]
+                }
+                if(tag == (tagsWithValues.length -1)) {
+                    var studentNameElement = document.getElementById("student")
+            var studentNameSelected = studentNameElement.options[studentNameElement.selectedIndex].text
+            var certificateName = localStorage.getItem("lsCertificateName")
+            var year = localStorage.getItem("lsYear")
+            var certificateType = localStorage.getItem("lsCertificateType")
+            var data = JSON.stringify({
+                "replaceData": JSON.stringify(jsonToReplace),
+                "fullName": studentNameSelected,
+                "certificateName": certificateName,
+                "certificateType": certificateType,
+                "year": year
+            })
+
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": window.location.origin + "/replaceArchive",
+                "method": "POST",
+                "headers": {
+                    "Content-Type": "application/json",
+                    "cache-control": "no-cache"
+                },
+                "processData": false,
+                "data": data
+            }
+
+            $.ajax(settings).done(function(response){
+                certificateDoneName = response
+                if (document.getElementById("downloadArchive")) {
+                document.getElementById("downloadArchive").remove()
+                }
+
+                var url="https://certificatesazurestorage.blob.core.windows.net/certificatesdone/" + certificateDoneName
+                var link = document.createElement("a")
+                $("body").append(link)
+                link.setAttribute("id", "downloadArchive")
+                link.setAttribute("href", url)
+                link.setAttribute("download", certificateName)
+                document.getElementById("downloadArchive").click()
+                hideLoading()
+            })
+                }
+            }
+        }
+
         function cleanArrays(){
             var variableNameError = document.getElementById("variableNameError")
             variableNameError.hidden = true;
-            variableNameError.innerHTML = 'Variables not found in Data Base'
+            variableNameError.innerHTML = 'Variables not found in Data Base: '
             textVariables = []
             counterText = 0
             tagsWithValues = []
             if (document.getElementById("downloadArchive")) {
                 document.getElementById("downloadArchive").remove()
             }
+        }
+
+        function deleteCertificateFromProject() {
+            var certificateName = localStorage.getItem("lsCertificateName")
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": window.location.origin + "/replaceArchive/" + certificateName,
+                "method": "DELETE",
+                "headers": {
+                    "cache-control": "no-cache",
+                }
+            }
+
+            $.ajax(settings).done(function(response){
+                    
+            })
         }
     </script>
 </body>

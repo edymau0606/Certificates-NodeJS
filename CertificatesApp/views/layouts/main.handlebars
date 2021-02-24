@@ -82,12 +82,12 @@
   <h1 id="userName" hidden>{{userName}}</h1>
   <nav class="navbar navbar-expand-sm bg-success navbar-dark">
 
-    <a class="navbar-brand" href="/">
+    <a class="navbar-brand" href="certificates">
       <img src="../images/aa-logo.png" style="width:150px;">
     </a>
 
     <ul class="navbar-nav" id="ulItems">
-      <li class="nav-item dropdown" id="liTable">
+      <li class="nav-item dropdown" id="liStudent">
         <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
           Students
         </a>
@@ -96,17 +96,16 @@
           <a class="dropdown-item" href="students">List</a>
         </div>
       </li>
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown" id="liCertificate">
         <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
           Certificates
         </a>
-        <div class="dropdown-menu" id="liTemplate">
-          <a class="dropdown-item" href="generateCertificate">Generate</a>
+        <div class="dropdown-menu">
           <a class="dropdown-item" href="createCertificate">Create/Upload</a>
-          <a class="dropdown-item" href="certificates">List</a>
+          <a class="dropdown-item" href="certificates">List/Generate</a>
         </div>
       </li>
-      <li class="nav-item dropdown" id="liTable">
+      <li class="nav-item dropdown" id="liUsers">
         <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
           Users
         </a>
