@@ -5,7 +5,14 @@ var users = require('../controllers/userController');
 var User = require('../models/user');
 
 router.get('/', function(req, res, next) {
-  res.render('listUsers');
+  if(req.session.loggedin) {
+    var userInfo = (req.session.username)
+        res.render('listUsers', {
+            userName: userInfo
+        })
+  } else {
+      res.redirect("login")
+  }
 });
 
 router.post('/', function(req, res, next){

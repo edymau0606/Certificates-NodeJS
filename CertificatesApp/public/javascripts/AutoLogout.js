@@ -33,7 +33,7 @@ class AutoLogout {
     }
 
     warn() {
-        alert('You will be logged out automatically in 1 minute. ');
+        //alert('You will be logged out automatically in 1 minute. ');
     }
 
     logout(){

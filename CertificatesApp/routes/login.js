@@ -4,7 +4,7 @@ var login = require('../controllers/loginController')
 var db = require('../controllers/connection')
 var User = require('../models/user')
 
-router.get('/', function(){
+router.get('/', function(req, res, next){
     res.render('login', {
         logOutButton: "Hide"
     })
@@ -23,7 +23,7 @@ router.post('/', function(request, response){
                     logOutButton: "Hide"
                 })
             } else {
-                request. session.loggedin = true;
+                request.session.loggedin = true;
                 request.session.username = res;
                 response.redirect('/')
             }

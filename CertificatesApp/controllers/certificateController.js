@@ -48,8 +48,28 @@ certificateController.write = function(req, res){
     }) 
 }
 
-module.exports.delete = function(db, name){
-    /*return new Promise((res, rej) => {
+certificateController.remove = function(req, res) {
+    const blobname = getBlobName(req.params.certificateName)
+    blobService.deleteBlobIfExists(containerName, blobname, err=> {
+        if(err) {
+            handleError(err)
+        } else {
+            return new Promise((response, rej) =>{
+                db.executeQuery("DELETE FROM dbo.[Certificate] WHERE CertificateName ='"+ blobname + "'")
+                .then(function(response){
+                    res.send("true")
+                })
+                .catch(function(err){
+                    rej(err)
+                })
+            })
+        }
+    })
+}
+
+/*module.exports.delete = function(db, name){
+    return new Promise((res, rej) => {
+        res("fasf")
         const certificateName = unescape(name)
     const blobName = getBlobName(certificateName)
      blobService.deleteBlobIfExists(containerName, blobName, err => {
@@ -66,7 +86,7 @@ module.exports.delete = function(db, name){
                 })
             }
         })
-    }) */
-}
+    }) 
+}*/
 
 module.exports = certificateController;

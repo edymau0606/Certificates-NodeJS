@@ -5,7 +5,14 @@ var multer = require('multer')
 var certificates = require('../controllers/certificateController')
 
 router.get('/', function(req, res, next) {
-  res.render('listCertificates');
+    if(req.session.loggedin) {
+        var userInfo = (req.session.username)
+            res.render('listCertificates', {
+                userName: userInfo
+            })
+    } else {
+        res.redirect("login")
+    }
 });
 
 inMemoryStorage = multer.memoryStorage(),
@@ -15,10 +22,6 @@ inMemoryStorage = multer.memoryStorage(),
 
 router.post('/', uploadStrategy, certificates.write);
 
-router.delete('/:certificateName', function(req, res, next){
-    var name = req.params.certificateName;
-    console.log(name)
-    certificates.delete(db, name)
-});
+router.delete('/:certificateName', certificates.remove);
 
 module.exports = router;

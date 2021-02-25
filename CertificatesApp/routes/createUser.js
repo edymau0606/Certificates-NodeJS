@@ -2,7 +2,14 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
-  res.render('createUser');
+  if(req.session.loggedin) {
+    var userInfo = (req.session.username)
+        res.render('createUser', {
+            userName: userInfo
+        })
+  } else {
+      res.redirect("login")
+  }
 });
 
 module.exports = router;

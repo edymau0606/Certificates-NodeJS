@@ -1,0 +1,80 @@
+<head>
+    <title>Login</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style type="text/css">
+        #loginError{
+            color: #dc3545
+        }
+
+        #modalHeaderID{
+            background-color: #72c02c!important
+        }
+
+        #loginTitle {
+            color: #f3f3f3 
+        }
+
+        #submitLogin {
+            background-color: #72c02c!important
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#myModal").modal('show');
+
+            var loginError = document.getElementById("loginError");
+            var divLogin = document.getElementById("divLogin");
+            var errorType = document.getElementById("errorType").innerText;
+
+            if(errorType=="Fail"){
+                loginError.innerHTML = "Incorrect Username and/or Password!"
+                loginError.hidden = false;
+            }
+
+            if(errorType=="Blank"){
+                loginError.innerHTML = "Please enter Username and Password!";
+                loginError.hidden = false;
+            }
+        })
+    </script>
+</head>
+<body>  
+    <script>
+        $('#myModal').modal({
+            backdrop: 'static',
+            keyboard: false
+        })
+    </script>
+    <h1 id="errorType" hidden>{{errorType}}</h1>
+    <div id="myModal" class="modal fade" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" id="modalHeaderID">
+                    <h4 class="modal-title" id="loginTitle">Login</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="/login" method="POST">
+                        <div class="form-group">
+                            <input type="text" name="username" class="form-control" placeholder="Username" required>
+                        </div>
+                        <div class="form-group" id="divLogin">
+                            <input type="password" name="password" class="form-control" placeholder="Password" required>
+                            <label class="control-label" id="loginError" hidden></label>
+                        </div>
+                        <button type="submit" class="btn btn-success" id="submitLogin">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>

@@ -6,10 +6,12 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-  {{!-- <script src="../javascripts/AutoLogout.js"></script> --}}
+  <script src="../javascripts/AutoLogout.js"></script>
   <style>
     #userNameID{
       margin-right: 20px!important;
+      background-color: #ffffffff!important;
+      color: #72c02c!important;
     }
     nav.navbar {
     background-color: #72c02c!important;
@@ -25,19 +27,6 @@
     var logout = new AutoLogout();
     var self = this;
     $(document).ready(function () {
-      var li = document.createElement("LI")
-      var liActual = document.createElement("LI")
-      var html = "";
-      var htmlActual = "";
-      html = document.getElementById("ulItem").innerText;
-      htmlActual = document.getElementById("ulItemActual").innerText;
-      li.innerHTML = html;
-      liActual.innerHTML = htmlActual
-      li.setAttribute("class", "nav-item dropdown")
-      liActual.setAttribute("class", "nav-item dropdown")
-      document.getElementById("ulItems").appendChild(li);
-      document.getElementById("ulItems").appendChild(liActual);
-
       var logOut = document.getElementById("logOutButton").innerText;
       if (logOut == "Hide") {
         var buttonLogOut = document.getElementById("buttonLogOut")
@@ -76,13 +65,11 @@
     }
 
   </script>
-  <h1 id="ulItem" hidden>{{hiddenEl}}</h1>
-  <h1 id="ulItemActual" hidden>{{hiddenActualEl}}</h1>
   <h1 id="logOutButton" hidden>{{logOutButton}}</h1>
   <h1 id="userName" hidden>{{userName}}</h1>
   <nav class="navbar navbar-expand-sm bg-success navbar-dark">
 
-    <a class="navbar-brand" href="certificates">
+    <a class="navbar-brand" href="/">
       <img src="../images/aa-logo.png" style="width:150px;">
     </a>
 

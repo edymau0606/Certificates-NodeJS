@@ -5,7 +5,14 @@ var students = require('../controllers/studentController');
 var Student = require('../models/student');
 
 router.get('/', function(req, res, next) {
-  res.render('listStudents');
+  if(req.session.loggedin) {
+    var userInfo = (req.session.username)
+        res.render('listStudents', {
+            userName: userInfo
+        })
+  } else {
+      res.redirect("login")
+  }
 });
 
 router.post('/', function(req, res, next){
